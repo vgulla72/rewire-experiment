@@ -1,0 +1,4 @@
+crewai==0.105.0
+crewai-tools==0.38.0
+databricks==0.2
+databricks-sdk==0.46.0
