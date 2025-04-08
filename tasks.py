@@ -38,7 +38,7 @@ query_classification_task = Task(
         "Analyze the user's input **{query}** and determine whether it relates to **work culture preferences** "
         "or **job roles/industry**.\n"
         "If the query concerns work-life balance, company culture, team dynamics, or leadership style, classify it as **Work Culture**.\n"
-        "If the query pertains to job positions, career paths, industries, or required skills, classify it as **Job Role/Industry**.\n"
+        "If the query pertains to job description, career paths, industries, or required skills, classify it as **Job Role/Industry**.\n"
         "Ensure the classification is **precise and unambiguous**."
     ),
     expected_output=(
@@ -51,7 +51,7 @@ query_classification_task = Task(
 jobrole_industry_research_task = Task(
     description=(
         "Analyze the user's **{query}** and **{profile}** to identify suitable job roles and industries.\n"
-        "Leverage industry trends and data to recommend positions aligning with the user's background.\n"
+        "Leverage industry trends and data to recommend positions aligning with the user's background and preferences.\n"
         "If available, refine recommendations using the companies suggested by `work_culture_researcher_agent`.\n"
         "Suggest any necessary **training or skills** required to qualify for these roles.\n"
         "Ensure recommendations are **accurate, well-supported, and aligned with industry standards**."
