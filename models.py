@@ -34,6 +34,7 @@ class ResumeData(BaseModel):
     work_experience: List[WorkExperience] = Field(description="List of experiences of the candidate")
     education: List[Education] = Field(description="List of educations of the candidate")
     total_yoe: int = Field(description="Total years of experience")
+    compensation: int = Field(description="Current compensation of the candidate")
     is_manager: bool = Field(description="Field to suggest if the profile's last job was an individual contributor or Manager")
     leadership_yoe: int = Field(description="If manager, the years of experience in leadership")
     major_industry_work: str = Field(description="Inferred from experience as to which Industry the candidate is most employed too")
@@ -50,11 +51,15 @@ class RoleRecommendation(BaseModel):
 class RoleRecommendations(BaseModel):
     recommendations: List[RoleRecommendation] = Field(description="List of roles and companies for recommendations along with suggested training & reasoning")
 
+class recommended_company(BaseModel):
+    company_name: str = Field(description="Name of the company that matches the user's work culture preferences.")
+    category: str = Field(description="Category of the company (e.g., non-profit, for-profit, government, academia, etc.).")
+    reasoning: str = Field(description="Justification for why this company aligns with the user's work culture preferences.")
+    additional_insights: Optional[str] = Field(description="Additional insights about the company, if available (e.g., employee reviews, work environment, etc.).")
 
 class WorkCultureRecommendations(BaseModel):
-    recommended_companies: List[str] = Field(description="List of companies that match the user's work culture preferences.")
-    reasoning: str = Field(description="Detailed explanation of why these companies align with the user's preferences.")
-
+    recommended_companies: List[recommended_company] = Field(description="List of companies that match the user's work culture preferences.")
+    key_cultural_factors: List[str] = Field(description="Key cultural factors considered in the recommendations (e.g., remote work policies, work-life balance, diversity, etc.).")
 
 class CareerTransitionRecommendation(BaseModel):
     recommended_role: str = Field(description="Suggested role based on user's profile and preferences matching with people transitions")

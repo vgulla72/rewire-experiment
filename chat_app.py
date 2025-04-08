@@ -27,7 +27,7 @@ def find_job_roles(user_input, profile, category):
 
 def start_chat_app(profile: ResumeData):
     print("Welcome to the Career Chatbot! Type 'exit' to quit.")
-    print("Welcome "+ profile.name + "!" + "Are you still looking for career pivot ideas?")
+    print("Welcome "+ profile.name + "!" + "Are you still looking for career pivot ideas? " + str(profile.compensation) + " is your current compensation?")
    
     while True:
         user_input = input("You: ")

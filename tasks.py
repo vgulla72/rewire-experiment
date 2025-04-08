@@ -25,6 +25,7 @@ description=(
         "This output should:\n"
         "Be **validated and free of errors**.\n"
         "Include additional insights**, such as employer reputation, industry , manager vs individual contributor etc.\n"
+        "Utilize web search and scraping tools to fetch compensation range for latest role from reliable sources.\n"
         "Maintain proper categorization** of roles, skills, and industries.\n"
         "Provide well reasoned justification wherever requested explicitly for the inferences"
     ),
@@ -77,6 +78,7 @@ work_culture_research_task = Task(
         "A structured response with:\n"
         "- **Recommended companies** matching the user's cultural preferences.\n"
         "- **Key cultural factors** considered (e.g., remote work policies, work-life balance, diversity, etc.).\n"
+        "- **Category of the company** (e.g., non-profit, for-profit, govt, academia, etc.).\n"
         "- **Well-reasoned justification** for each recommendation.\n"
         "- **Additional insights** (if available)."
     ),
