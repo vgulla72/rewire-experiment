@@ -4,7 +4,8 @@ from crewai import Agent
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
 
 os.environ["OPENAI_MODEL_NAME"] = "gpt-4o-mini"
-
+os.environ["OPENAI_API_KEY"] = "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"
+os.environ["SERPER_API_KEY"] = "81f6a8a64d6073c203244955547884116014b0f2"
 
 resume_parser_agent = Agent(
     role="Resume Parser & Enrichment Specialist",
@@ -17,7 +18,7 @@ resume_parser_agent = Agent(
         "and industry knowledge to enhance resume data. "
         "You also cross-reference information to provide additional insights such as industry classification, "
         "company reputation, job seniority levels, compensation range and potential career trajectories. "
-        "Your responses should be **comprehensive, structured, accurate and free from assumptions**."
+        "Your responses should be **comprehensive, structured, and free from assumptions**."
           "To ensure **accuracy and credibility**, you will only retrieve information from **trusted sources**, such as:\n"
         "- Glassdoor (www.glassdoor.com)\n"
         "- LinkedIn (www.linkedin.com)\n"
