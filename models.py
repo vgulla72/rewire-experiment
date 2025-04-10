@@ -26,6 +26,7 @@ class CareerPreferences(BaseModel):
     workplace_dislikes: List[str] = Field(description="Candidate's workplace dislikes based on their work experience. Do not infer if not present")
     reasoning: str = Field(description="Detailed justification for inferring preferences around likes, dislikes, domain and industry along with compensation")
 
+
 class ResumeData(BaseModel):
     name: str = Field(description="Full name of the candidate")
     email: str = Field(description="Email of the candidate")
@@ -41,9 +42,11 @@ class ResumeData(BaseModel):
     current_industry: str = Field(description="Inferred from either current or last experience to which Industry the candidate has been employed at")
     current_domain: str = Field(description="Inferred from the description in either current or last experience ")
     career_preferences: CareerPreferences = Field(description="Various career preferences of the candidate")
+    hobbies: List[str] = Field(description="Candidate's hobbies/interests that they want to include in options")
 
 class RoleRecommendation(BaseModel):
     recommended_roles: List[str] = Field(description="List of suggested job roles based on the user's profile.")
+    category: str = Field(description="Category of the role (e.g., Consultant/Freelance, Part-time, Academia, Govt, etc.).")
     recommended_company: List[str] = Field(description="Name of the company where these roles exist.")
     suggested_training: Optional[List[str]] = Field(None, description="If necessary, recommended training to qualify for these roles.")
     reasoning: str = Field(description="Justification for the recommendations based on user's profile and preferences.")

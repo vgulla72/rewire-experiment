@@ -17,9 +17,12 @@ def get_structured_data_from_resume(resume_text):
     crew = Crew(agents=[resume_parser_agent], tasks=[resume_extraction])
 
     result = crew.kickoff(inputs={"profile": resume_text})
+    print(result.raw)
 
     structured_response = ResumeData.model_validate_json(result.raw)
     return structured_response
+
+
 
 def get_structured_data_from_resume_path(pdf_path):
     resume_text = extract_text_from_pdf(pdf_path)
@@ -27,5 +30,7 @@ def get_structured_data_from_resume_path(pdf_path):
 
 
 if __name__ == '__main__':
-    resume_data = get_structured_data_from_resume_path("/Users/vasanthagullapalli/Documents/Vasantha Gullapalli Resume.pdf")
+    #get_structured_data_from_resume_path("/home/karthik/Downloads/Karthik_Jayanthi_Resume.pdf")
+
+    resume_data = get_structured_data_from_resume_path("/home/karthik/Downloads/Karthik_Jayanthi_Resume.pdf")
     print(json.dumps(resume_data.model_dump(), indent=2))

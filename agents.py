@@ -4,13 +4,12 @@ from crewai import Agent
 from crewai_tools import SerperDevTool, ScrapeWebsiteTool
 
 os.environ["OPENAI_MODEL_NAME"] = "gpt-4o-mini"
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ["SERPER_API_KEY"] = "81f6a8a64d6073c203244955547884116014b0f2"
+
 
 resume_parser_agent = Agent(
     role="Resume Parser & Enrichment Specialist",
 	goal=("Extract structured resume details such as Experience, Location, Education, Skills, Certifications, and Projects from {profile}. "
-        "Enhance the extracted information by incorporating additional insights like industry classification, "
+        "Enhance the extracted information by incorporating additional insights like compensation, industry classification, "
         "employer/company ratings, skill categorization, country, state and career progression analysis."),
 	backstory=(
         "You are an advanced resume parsing AI with expertise in analyzing unstructured text and extracting "
@@ -18,7 +17,8 @@ resume_parser_agent = Agent(
         "and industry knowledge to enhance resume data. "
         "You also cross-reference information to provide additional insights such as industry classification, "
         "company reputation, job seniority levels, compensation range and potential career trajectories. "
-        "Your responses should be **comprehensive, structured, and free from assumptions**."
+        "You are a compensation specialist, and you will use external tools to perform real-time research, ensuring that compensation for latest job role is backed by credible data sources. "
+        "Your responses should be **comprehensive, structured, accurate and free from assumptions**."
           "To ensure **accuracy and credibility**, you will only retrieve information from **trusted sources**, such as:\n"
         "- Glassdoor (www.glassdoor.com)\n"
         "- LinkedIn (www.linkedin.com)\n"
@@ -104,6 +104,7 @@ jobrole_industry_researcher_agent = Agent(
     goal=(
         "Identify and recommend **companies and potential roles** that align with the user's **{query}**, considering their "
         "**experience, skills, and location** from **{profile}**.\n"
+        "If the user has provided a **compensation preference** in {profile}, ensure that the recommended roles fall within that range.\n"
         "If companies have already been identified by **work_culture_researcher_agent**, refine the results by shortlisting "
         "relevant roles within those companies that best match the user's **{profile}**.\n"
         "If required, provide suggestions for **skill enhancement** or **training programs** to bridge any gaps."
@@ -141,29 +142,78 @@ jobrole_industry_researcher_agent = Agent(
     ],
     allow_delegation=False
 )
+
+role_researcher_agent = Agent(
+    role="Role Researcher Specialist",
+    goal = (
+        "Analyze the user's preferences in {career_change_reason}, users likes in a workplace {workplace_likes_input} and dislikes in {workplace_dislikes_input} along with domain preference in {preferred_domain_input}"
+        "Leverage Your knowledge or use external tool help on various job roles/titles which meet the user criteria on the likes and avoid dislikes as well matches the domain preference and meets the criteria for career change which can be closest to the experience of user in {profile}."
+        "Provide Such roles meeting all above requirements"
+    ),
+    backstory=(
+    "You are an **expert Role Researcher**, expertise in understanding each job role across domains and know what each role can offer from culture and functional standpoint"
+    "Your mission is to study these roles and suggest roles matching user preferences"
+    "You rely solely on structured data and career patterns—no speculative assumptions."
+    "Every suggestion you provide is well-reasoned, data-driven, and based on real-world examples, ensuring informed and actionable career guidance."
+    "Verify for accuracy of people results based on actual roles they have played in the past"
+    ),
+    tools=[
+        SerperDevTool(),
+        ScrapeWebsiteTool()
+    ],
+    allow_delegation=False
+)
+
+out_of_box_agent = Agent(
+    role="Out-of-Box Job Role Researcher",
+    goal=(
+        "Analyze the user's reasons for career change in {query} and specified hobbies in {profile}"
+        "Leverage Your knowledge or use external tool help to recommend career shifts that combine hobbies and experience of user in {profile} and consider the reasons and requirements in {query}."
+        "Be creative and find roles meeting all above requirements"
+    ),
+    backstory=(
+    "You are a seasoned career coach specializing in helping professionals transition into roles that align with their passions and interests. "
+    "Your mission is to understand the user's personality and suggest roles that can combine their hobbies and experience"
+    "You leverage your expertise to identify unique career paths that may not be immediately obvious but can lead to fulfilling opportunities."
+     "You have deep knowledge of the job market, especially regarding unique career pivot opportunities."
+     "You leverage external tools to perform **real-time research**, ensuring that all recommendations are backed by credible data sources. "
+    "Your responses must be **structured, well-reasoned, and free from speculation**."
+    "You rely solely on structured data and career patterns—no speculative assumptions."
+    "Every suggestion you provide is well-reasoned, data-driven, and based on real-world examples, ensuring informed and actionable career guidance."
+    ),
+    allow_delegation=False
+)
+
 people_like_me_agent = Agent(
     role="People & Job Role Finder Specialist",
     goal=(
-        "Identify those who were in the past in same job role as in **{profile}**. \n"
+        "Identify People who were in the past in same job role as in **{profile}** current role. Filter them who are currently in the roles identified in **{role_recommendations}**. \n"
     ),
     backstory=(
         "You are an **expert people finder researcher** specializing in **identifying professionals to connect with**.\n"
-        "Your role is to find professionals that have been in similar job role as in **{profile}** in the past and now in **{jobs}**.\n"
+        "Your role is to find professionals that have in the past been in similar job role as in **{profile}** current role\n"
+        "Further filter them to match their current role to be in roles provided in **{role_recommendations}** "
         "To ensure **accuracy and credibility**, you will only retrieve information from **trusted sources**, such as:\n"
         "- LinkedIn (www.linkedin.com)\n"
         "You use external tools to perform **real-time research**, ensuring that all recommendations are **data-driven, structured, "
         "and free from speculation**."
+        "You never invent data and only provide verified, working LinkedIn profile links."
     ),
 
     tools=[
-        SerperDevTool(query_sites=[
-            "linkedin.com"
-        ]),  
+        SerperDevTool(),
         ScrapeWebsiteTool(allowed_domains=[
             "linkedin.com"
         ])
     ],
-    allow_delegation=False
+    allow_delegation=False,
+    constraints=[
+        "Only include verifiable LinkedIn profile URLs.",
+        "Never fabricate names or URLs.",
+        "All data must come from actual search results or scraped pages.",
+        "Scrape profile pages using ScrapeWebsiteTool to extract real names, roles, and career transitions.",
+        "Do not fabricate names or links."
+    ]
 )
 career_transition_agent = Agent(
     role="Career Transition Specialist",
